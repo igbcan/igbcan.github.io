@@ -1,0 +1,35 @@
+name: ICanFB Fixture Sync
+
+on:
+  schedule:
+    - cron: '30 */6 * * *'
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'icanfb/**'
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          cd icanfb
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Scraper
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          cd icanfb
+          python scraper.py
