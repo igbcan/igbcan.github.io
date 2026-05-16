@@ -3,178 +3,269 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Can Mobile Apps - Geliştirici Portfolyosu</title>
+    <title>iCan_ - Mobil Uygulama Geliştirici</title>
     <style>
         :root {
-            --bg-color: #04091a;
-            --card-bg: #0a1129;
-            --text-bright: #f0f6fc;
-            --text-normal: #c9d1d9;
-            --accent-blue: #58a6ff;
-            --border-color: #1a233a;
-            --badge-live: #238636;
-            --badge-test: #9e6a00;
-            --badge-soon: #1f6feb;
+            --primary-blue: #1e6091;
+            --accent-blue: #0077b6;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --bg-light: #f7fafc;
+            --card-bg: #ffffff;
+            --border: #e2e8f0;
+            --badge-live: #2f855a;
+            --badge-live-bg: #c6f6d5;
+            --badge-test: #c05621;
+            --badge-test-bg: #feebc8;
+            --badge-soon: #2b6cb0;
+            --badge-soon-bg: #ebf8ff;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-normal);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-main);
             margin: 0;
             padding: 0;
             line-height: 1.6;
         }
-        header {
+        /* Üst Menü Çubuğu */
+        nav {
+            background-color: #ffffff;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .logo-area {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .logo-dot { color: #d69e2e; }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--accent-blue); }
+        .btn-nav-discover {
+            background-color: #1a73e8;
+            color: white !important;
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600 !important;
+        }
+        .btn-nav-discover:hover { background-color: #1557b0; }
+
+        /* Kahraman Başlık Alanı */
+        .hero {
+            text-align: center;
+            padding: 50px 20px 20px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .hero-mini-title {
+            background-color: #e2e8f0;
+            color: #4a5568;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            margin: 0 0 15px 0;
+            line-height: 1.1;
+            color: #0f172a;
+        }
+        .hero h1 span.yellow-text { color: #d69e2e; }
+        .hero p.hero-sub {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin: 0 auto 25px auto;
+            max-width: 600px;
+        }
+        .btn-hero-view {
+            background-color: #1a73e8;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px -1px rgba(26, 115, 232, 0.2);
+        }
+
+        /* Banner Görseli (Aşağı İndirilen Kısım) */
+        .banner-container {
+            max-width: 750px;
+            margin: 30px auto 60px auto;
+            padding: 0 20px;
+        }
+        .icangenel-img {
             width: 100%;
             height: auto;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            background-color: #000;
-        }
-        .icangenel-header-img {
-            max-width: 100%;
-            height: auto;
-            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
             display: block;
         }
+
+        /* Uygulama Kartları Listesi */
         .container {
-            max-width: 1000px;
-            margin: 60px auto;
+            max-width: 950px;
+            margin: 0 auto 80px auto;
             padding: 0 20px;
         }
         .section-title {
-            font-size: 1.6rem;
-            color: var(--text-bright);
-            font-weight: 600;
-            margin-bottom: 40px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 12px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #cbd5e1;
         }
         .apps-list {
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
         }
         .app-card {
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
             display: flex;
-            align-items: center;
-            gap: 30px;
-            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2);
+            align-items: flex-start;
+            gap: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
         }
         .app-card:hover {
-            transform: translateY(-5px);
-            border-color: #38435f;
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 20px -5px rgba(0,0,0,0.08);
         }
         .app-icon {
-            width: 100px;
-            height: 100px;
+            width: 96px;
+            height: 96px;
             border-radius: 20px;
             object-fit: cover;
-            border: 1px solid var(--border-color);
-            background-color: #04091a;
+            border: 1px solid var(--border);
             flex-shrink: 0;
+            background-color: #fff;
         }
-        .app-info {
-            flex-grow: 1;
-        }
+        .app-info { flex-grow: 1; }
         .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
+            display: inline-block;
             padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--text-bright);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 12px;
         }
-        .badge-live { background-color: var(--badge-live); }
-        .badge-test { background-color: var(--badge-test); }
-        .badge-soon { background-color: var(--badge-soon); }
+        .badge-live { background-color: var(--badge-live-bg); color: var(--badge-live); }
+        .badge-test { background-color: var(--badge-test-bg); color: var(--badge-test); }
+        .badge-soon { background-color: var(--badge-soon-bg); color: var(--badge-soon); }
         
         .app-title {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--text-bright);
-            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #0f172a;
+            margin: 0 0 8px 0;
         }
         .app-desc {
-            color: #8b949e;
+            color: var(--text-muted);
             font-size: 0.98rem;
-            margin-bottom: 25px;
+            margin: 0 0 20px 0;
         }
-        .links {
-            display: flex;
-            gap: 12px;
-        }
+        .links { display: flex; gap: 12px; }
         .btn {
-            display: inline-block;
-            text-align: center;
-            padding: 10px 20px;
-            border-radius: 6px;
-            font-size: 0.95rem;
-            font-weight: 500;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
             text-decoration: none;
             transition: background-color 0.2s;
-            border: 1px solid var(--border-color);
+            border: 1px solid #cbd5e1;
         }
         .btn-secondary {
-            background-color: #1a233a;
-            color: var(--accent-blue);
-            border-color: var(--border-color);
+            background-color: #f8fafc;
+            color: #4a5568;
         }
         .btn-secondary:hover {
-            background-color: #262e4a;
-            border-color: #8b949e;
+            background-color: #edf2f7;
+            border-color: #a0aec0;
         }
         .btn-disabled {
-            background-color: #080d21;
-            color: #484f58;
-            border-color: var(--border-color);
+            background-color: #edf2f7;
+            color: #a0aec0;
+            border-color: #e2e8f0;
             cursor: not-allowed;
         }
         footer {
             text-align: center;
-            padding: 60px 20px;
-            color: #8b949e;
+            padding: 40px 20px;
+            color: var(--text-muted);
             font-size: 0.9rem;
-            border-top: 1px solid var(--border-color);
-            margin-top: 100px;
+            border-top: 1px solid var(--border);
+            background-color: #ffffff;
         }
-        footer a {
-            color: var(--accent-blue);
-            text-decoration: none;
-        }
-        footer a:hover {
-            text-decoration: underline;
-        }
+        footer a { color: var(--accent-blue); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
-    <header>
-        <img src="icangenel.jpg" alt="Can Mobile Apps Banner" class="icangenel-header-img" onerror="this.src='https://igbcan.github.io/icangenel.png'">
-    </header>
+    <nav>
+        <div class="logo-area">iCan<span class="logo-dot">_</span></div>
+        <div class="nav-links">
+            <a href="#apps">Uygulamalar</a>
+            <a href="#">Hakkımızda</a>
+            <a href="mailto:icandefence@gmail.com">İletişim</a>
+            <a href="#apps" class="btn-nav-discover">Uygulamaları Keşfet</a>
+        </div>
+    </nav>
 
-    <div class="container">
-        <h2 class="section-title">Mobil Uygulamalarımız</h2>
+    <div class="hero">
+        <span class="hero-mini-title">● Mobil Uygulama Geliştirici</span>
+        <h1>Fikirlerimizi<br>Uygulamaya<br><span class="yellow-text">Döküyoruz</span></h1>
+        <p class="hero-sub">iCan_ markasıyla eğitimden spora, her alana dokunacak Android uygulamaları geliştiriyoruz.</p>
+        <a href="#apps" class="btn-hero-view">⬇ Uygulamalarımızı Gör</a>
+    </div>
+
+    <div class="banner-container">
+        <img src="icangenel.jpg" alt="iCan Showcase" class="icangenel-img">
+    </div>
+
+    <div class="container" id="apps">
+        <h2 class="section-title">Uygulamalarımız</h2>
         <div class="apps-list">
 
             <div class="app-card">
-                <img src="lingoeng.png" alt="ICanLingoENG Logo" class="app-icon" onerror="this.style.display='none'">
+                <img src="icanlingoenglogo.png" alt="ICanLingoENG Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-live">● Google Play'de Yayında</span>
                     <h3 class="app-title">ICanLingoENG</h3>
-                    <p class="app-desc">İnteraktif 3D avatarlar, sesli telaffuz analizleri ve eğlenceli pratiklerle İngilizce öğrenmeyi kolaylaştıran modern dil eğitimi uygulaması.</p>
+                    <p class="app-desc">İnteraktif 3D avatar öğretmenle, istediğiniz zaman istediğiniz yerde ücretsiz olarak İngilizce öğrenin. Sesli telaffuz ve yüzlerce alıştırma ile İngilizce öğrenmeyi kolaylaştıran modern dil eğitimi.</p>
                     <div class="links">
                         <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
@@ -182,11 +273,11 @@
             </div>
 
             <div class="app-card">
-                <img src="icanfb.png" alt="ICanFB Logo" class="app-icon" onerror="this.style.display='none'">
+                <img src="ICanFBLogo.png" alt="ICanFB Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-test">⏳ Kapalı Test Aşamasında</span>
                     <h3 class="app-title">ICanFB - Fenerbahçe Fikstür</h3>
-                    <p class="app-desc">Fenerbahçeli taraftarlar için özel olarak tasarlanmış; güncel fikstür takibi ve maç sonuçlarını anlık olarak barındıran spor uygulaması.</p>
+                    <p class="app-desc">Fenerbahçeli taraftarlar için özel olarak tasarlanmış; güncel fikstür takibi, gönül verdiğiniz takımın maçlarını kaçırmayın.</p>
                     <div class="links">
                         <span class="btn btn-disabled">Pek Yakında Store'da</span>
                     </div>
@@ -194,11 +285,11 @@
             </div>
 
             <div class="app-card">
-                <img src="sayidoku.png" alt="ICan Sayı Doku Logo" class="app-icon" onerror="this.style.display='none'">
+                <img src="sayidoku.png" alt="ICan Sayı Doku Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-soon">🚀 Pek Yakında</span>
                     <h3 class="app-title">ICan Sayı Doku</h3>
-                    <p class="app-desc">Zihninizi zinde tutacak minimalist tasarıma sahip modern bir Sudoku oyunu. 4x4, 6x6 ve 9x9 matris seçenekleriyle başlangıçtan uzman seviyesine kadar her yaşa ve her zorluk derecesine hitap eden zeka bulmacası.</p>
+                    <p class="app-desc">Zihninizi zinde tutacak, minimalist tasarıma ve kullanıcı dostu arayüze sahip, her yaşa uygun modern bir 4x4 ve klasik Sudoku bulmaca oyunu. 4x4, 6x6 ve 9x9 matris seçenekleriyle başlangıçtan uzman seviyesine kadar her yaşa ve her zorluk derecesine hitap eden zeka bulmacası.</p>
                     <div class="links">
                         <a href="https://igbcan.github.io/icansayidoku-privacy.html" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
@@ -209,7 +300,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Can Mobile Apps. Tüm Hakları Saklıdır.</p>
+        <p>&copy; 2026 iCan_ Mobile. Tüm Hakları Saklıdır.</p>
         <p>İletişim: <a href="mailto:icandefence@gmail.com">icandefence@gmail.com</a> | <a href="https://igbcan.github.io/app-ads.txt" target="_blank">app-ads.txt</a></p>
     </footer>
 
