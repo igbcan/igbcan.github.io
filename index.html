@@ -40,14 +40,14 @@
             margin: 0 auto;
         }
         .logo-area {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: var(--text-main);
             display: flex;
             align-items: center;
-            gap: 5px;
         }
-        .logo-dot { color: #d69e2e; }
+        .nav-logo-img {
+            height: 35px;
+            width: auto;
+            object-fit: contain;
+        }
         .nav-links {
             display: flex;
             align-items: center;
@@ -116,7 +116,7 @@
             box-shadow: 0 4px 6px -1px rgba(26, 115, 232, 0.2);
         }
 
-        /* Banner Görseli (Aşağı İndirilen Kısım) */
+        /* Banner Görseli */
         .banner-container {
             max-width: 750px;
             margin: 30px auto 60px auto;
@@ -155,7 +155,7 @@
             border-radius: 16px;
             padding: 28px;
             display: flex;
-            align-items: flex-start;
+            align-items: center; /* Logoları dikeyde tam ortalamak için */
             gap: 25px;
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
@@ -236,7 +236,9 @@
 <body>
 
     <nav>
-        <div class="logo-area">iCan<span class="logo-dot">_</span></div>
+        <div class="logo-area">
+            <img src="icanlogo.jpg" alt="iCan_ Logo" class="nav-logo-img" onerror="this.src='icanlogo.png'">
+        </div>
         <div class="nav-links">
             <a href="#apps">Uygulamalar</a>
             <a href="#">Hakkımızda</a>
@@ -261,7 +263,7 @@
         <div class="apps-list">
 
             <div class="app-card">
-                <img src="icanlingoenglogo.png" alt="ICanLingoENG Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
+                <img src="lingoeng.png" alt="ICanLingoENG Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-live">● Google Play'de Yayında</span>
                     <h3 class="app-title">ICanLingoENG</h3>
@@ -273,7 +275,7 @@
             </div>
 
             <div class="app-card">
-                <img src="ICanFBLogo.png" alt="ICanFB Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
+                <img src="icanfb.png" alt="ICanFB Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-test">⏳ Kapalı Test Aşamasında</span>
                     <h3 class="app-title">ICanFB - Fenerbahçe Fikstür</h3>
