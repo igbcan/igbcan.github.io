@@ -6,12 +6,12 @@
     <title>Can Mobile Apps - Geliştirici Portfolyosu</title>
     <style>
         :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --text-color: #c9d1d9;
+            --bg-color: #04091a;
+            --card-bg: #0a1129;
             --text-bright: #f0f6fc;
+            --text-normal: #c9d1d9;
             --accent-blue: #58a6ff;
-            --border-color: #30363d;
+            --border-color: #1a233a;
             --badge-live: #238636;
             --badge-test: #9e6a00;
             --badge-soon: #1f6feb;
@@ -19,22 +19,26 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
-            color: var(--text-color);
+            color: var(--text-normal);
             margin: 0;
             padding: 0;
             line-height: 1.6;
         }
         header {
-            background-color: var(--card-bg);
+            width: 100%;
+            height: auto;
             border-bottom: 1px solid var(--border-color);
-            text-align: center;
-            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #000;
         }
-        header h1 {
-            margin: 0;
-            font-size: 2.5rem;
-            color: var(--text-bright);
-            font-weight: 600;
+        .icangenel-header-img {
+            max-width: 100%;
+            height: auto;
+            object-fit: cover;
+            display: block;
         }
         header p {
             margin: 15px 0 0 0;
@@ -42,46 +46,60 @@
             color: #8b949e;
         }
         .container {
-            max-width: 1100px;
-            margin: 50px auto;
+            max-width: 1000px;
+            margin: 60px auto;
             padding: 0 20px;
         }
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.6rem;
             color: var(--text-bright);
             font-weight: 600;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
         }
-        .apps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 25px;
+        .apps-list {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
         }
         .app-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 28px;
+            border-radius: 12px;
+            padding: 30px;
             display: flex;
-            flex-direction: column;
-            transition: transform 0.2s, border-color 0.2s;
+            align-items: center;
+            gap: 30px;
+            transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2);
         }
         .app-card:hover {
-            transform: translateY(-4px);
-            border-color: #8b949e;
+            transform: translateY(-5px);
+            border-color: #38435f;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.3);
+        }
+        .app-icon {
+            width: 100px;
+            height: 100px;
+            border-radius: 20px;
+            object-fit: cover;
+            border: 1px solid var(--border-color);
+            background-color: #04091a;
+            flex-shrink: 0;
+        }
+        .app-info {
+            flex-grow: 1;
         }
         .badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             margin-bottom: 15px;
-            align-self: flex-start;
             color: var(--text-bright);
         }
         .badge-live { background-color: var(--badge-live); }
@@ -89,55 +107,53 @@
         .badge-soon { background-color: var(--badge-soon); }
         
         .app-title {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: 600;
             color: var(--text-bright);
-            margin: 0 0 12px 0;
+            margin: 0 0 10px 0;
         }
         .app-desc {
             color: #8b949e;
-            font-size: 0.95rem;
+            font-size: 0.98rem;
             margin-bottom: 25px;
-            flex-grow: 1;
         }
         .links {
             display: flex;
             gap: 12px;
-            margin-top: auto;
         }
         .btn {
-            flex: 1;
+            display: inline-block;
             text-align: center;
-            padding: 10px 16px;
+            padding: 10px 20px;
             border-radius: 6px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 500;
             text-decoration: none;
             transition: background-color 0.2s;
             border: 1px solid var(--border-color);
         }
         .btn-secondary {
-            background-color: #21262d;
+            background-color: #1a233a;
             color: var(--accent-blue);
             border-color: var(--border-color);
         }
         .btn-secondary:hover {
-            background-color: #30363d;
+            background-color: #262e4a;
             border-color: #8b949e;
         }
         .btn-disabled {
-            background-color: #0d1117;
+            background-color: #080d21;
             color: #484f58;
             border-color: var(--border-color);
             cursor: not-allowed;
         }
         footer {
             text-align: center;
-            padding: 50px 20px;
+            padding: 60px 20px;
             color: #8b949e;
             font-size: 0.9rem;
             border-top: 1px solid var(--border-color);
-            margin-top: 80px;
+            margin-top: 100px;
         }
         footer a {
             color: var(--accent-blue);
@@ -151,38 +167,46 @@
 <body>
 
     <header>
-        <h1>Can Mobile Apps</h1>
-        <p>Android Platformu İçin Eğitici, Eğlenceli ve Yenilikçi Mobil Uygulamalar</p>
+        <img src="icangenel.jpg" alt="Can Mobile Apps Banner" class="icangenel-header-img" onerror="this.src='https://igbcan.github.io/icangenel.png'">
     </header>
 
     <div class="container">
-        <h2 class="section-title">Uygulamalarımız</h2>
-        <div class="apps-grid">
+        <h2 class="section-title">Mobil Uygulamalarımız</h2>
+        <div class="apps-list">
 
             <div class="app-card">
-                <span class="badge badge-live">● Google Play'de Yayında</span>
-                <div class="app-title">ICanLingoENG</div>
-                <div class="app-desc">İnteraktif 3D avatarlar, sesli telaffuz analizleri ve eğlenceli pratiklerle İngilizce öğrenmeyi kolaylaştıran modern dil eğitimi uygulaması.</div>
-                <div class="links">
-                    <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
+                <img src="lingoeng.png" alt="ICanLingoENG Logo" class="app-icon" onerror="this.style.display='none'">
+                <div class="app-info">
+                    <span class="badge badge-live">● Google Play'de Yayında</span>
+                    <h3 class="app-title">ICanLingoENG</h3>
+                    <p class="app-desc">İnteraktif 3D avatarlar, sesli telaffuz analizleri ve eğlenceli pratiklerle İngilizce öğrenmeyi kolaylaştıran modern dil eğitimi uygulaması.</p>
+                    <div class="links">
+                        <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
+                    </div>
                 </div>
             </div>
 
             <div class="app-card">
-                <span class="badge badge-test">⏳ Kapalı Test Aşamasında</span>
-                <div class="app-title">ICanFB - Fenerbahçe Fikstür</div>
-                <div class="app-desc">Fenerbahçeli taraftarlar için özel olarak tasarlanmış; güncel fikstür takibi, maç sonuçları ve takıma özel marşlar barındıran spor uygulaması.</div>
-                <div class="links">
-                    <span class="btn btn-disabled">Pek Yakında Store'da</span>
+                <img src="icanfb.png" alt="ICanFB Logo" class="app-icon" onerror="this.style.display='none'">
+                <div class="app-info">
+                    <span class="badge badge-test">⏳ Kapalı Test Aşamasında</span>
+                    <h3 class="app-title">ICanFB - Fenerbahçe Fikstür</h3>
+                    <p class="app-desc">Fenerbahçeli taraftarlar için özel olarak tasarlanmış; güncel fikstür takibi, maç sonuçları ve takıma özel marşlar barındıran spor uygulaması.</p>
+                    <div class="links">
+                        <span class="btn btn-disabled">Pek Yakında Store'da</span>
+                    </div>
                 </div>
             </div>
 
             <div class="app-card">
-                <span class="badge badge-soon">🚀 Pek Yakında</span>
-                <div class="app-title">ICan Sayı Doku</div>
-                <div class="app-desc">Zihninizi zinde tutacak minimalist tasarıma sahip modern bir Sudoku oyunu. 4x4, 6x6 ve 9x9 matris seçenekleriyle başlangıçtan uzman seviyesine kadar her yaşa ve her zorluk derecesine hitap eden zeka bulmacası.</div>
-                <div class="links">
-                    <a href="https://igbcan.github.io/iansayidoku-privacy.html" class="btn btn-secondary">Gizlilik Politikası</a>
+                <img src="sayidoku.png" alt="ICan Sayı Doku Logo" class="app-icon" onerror="this.style.display='none'">
+                <div class="app-info">
+                    <span class="badge badge-soon">🚀 Pek Yakında</span>
+                    <h3 class="app-title">ICan Sayı Doku</h3>
+                    <p class="app-desc">Zihninizi zinde tutacak minimalist tasarıma sahip modern bir Sudoku oyunu. 4x4, 6x6 ve 9x9 matris seçenekleriyle başlangıçtan uzman seviyesine kadar her yaşa ve her zorluk derecesine hitap eden zeka bulmacası.</p>
+                    <div class="links">
+                        <a href="https://igbcan.github.io/iansayidoku-privacy.html" class="btn btn-secondary">Gizlilik Politikası</a>
+                    </div>
                 </div>
             </div>
 
