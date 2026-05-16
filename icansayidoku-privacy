@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gizlilik Politikası - ICan Sayı Doku</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; max-width: 800px; margin: 0 auto; color: #333; }
+        h1 { color: #0056b3; }
+        h2 { color: #333; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <h1>Gizlilik Politikası</h1>
+    <p>Son güncelleme: 16 Mayıs 2026</p>
+
+    <p><strong>ICan Sayı Doku</strong> uygulaması olarak kullanıcılarımızın gizliliğine önem veriyoruz. Bu gizlilik politikası, uygulamamızın hangi verileri nasıl işlediğini açıklar.</p>
+
+    <h2>1. Toplanan Veriler</h2>
+    <p>Uygulamamız kullanıcılardan doğrudan herhangi bir kişisel bilgi (isim, e-posta, telefon numarası vb.) toplamaz, saklamaz veya üçüncü taraflarla paylaşmaz.</p>
+
+    <h2>2. Üçüncü Taraf Hizmetleri ve Reklamlar</h2>
+    <p>Uygulamamız, reklam gösterimi sunabilmek amacıyla Google AdMob hizmetini kullanmaktadır. Google AdMob, size ilgi alanlarınıza göre reklamlar gösterebilmek için cihaz kimliği (Advertising ID) gibi anonim teknik verileri toplayabilir ve işleyebilir. Google'ın bu verileri nasıl kullandığı hakkında daha fazla bilgi için <a href="https://policies.google.com/privacy" target="_blank">Google Gizlilik Politikası</a> sayfasını ziyaret edebilirsiniz.</p>
+
+    <h2>3. Çocukların Gizliliği</h2>
+    <p>Uygulamamız genel hedef kitleye yönelik bir bulmaca oyunudur ve bilerek çocuklardan kişisel olarak tanımlanabilir bilgi toplamaz.</p>
+
+    <h2>4. İletişim</h2>
+    <p>Bu gizlilik politikası hakkında sorularınız varsa bizimle iletişime geçebilirsiniz:</p>
+    <p>E-posta: icandefence@gmail.com</p>
+
+</body>
+</html>
