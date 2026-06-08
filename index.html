@@ -25,28 +25,56 @@
             background-color: var(--bg-light);
             color: var(--text-main);
             margin: 0;
-            padding: 0;
+            padding: 75px 0 0 0; /* Nav sabit olduğu için içeriğin üste yapışmasını engeller */
             line-height: 1.6;
+            scroll-behavior: smooth; /* Menüye tıklayınca yumuşak kayma sağlar */
         }
         /* Üst Menü Çubuğu */
         nav {
             background-color: #ffffff;
-            padding: 15px 40px;
+            padding: 10px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
         }
-        .logo-area {
+        /* Logo ve Yazı Alanı */
+        .logo-link {
             display: flex;
+            flex-direction: column;
             align-items: center;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .logo-link:hover {
+            opacity: 0.85;
         }
         .nav-logo-img {
             height: 35px;
             width: auto;
             object-fit: contain;
+        }
+        .logo-subtext {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
         }
         .nav-links {
             display: flex;
@@ -59,8 +87,27 @@
             font-weight: 500;
             font-size: 0.95rem;
             transition: color 0.2s;
+            position: relative;
+            padding-bottom: 4px;
         }
         .nav-links a:hover { color: var(--accent-blue); }
+        
+        /* Aktif Menü Elemanı İşaretçisi (Mavi yazı ve alt çizgi) */
+        .nav-links a.active {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+        .nav-links a.active::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background-color: var(--accent-blue);
+            bottom: 0;
+            left: 0;
+            border-radius: 2px;
+        }
+
         .btn-nav-discover {
             background-color: #1a73e8;
             color: white !important;
@@ -69,11 +116,12 @@
             font-weight: 600 !important;
         }
         .btn-nav-discover:hover { background-color: #1557b0; }
+        .btn-nav-discover.active::after { display: none; } /* Buton için alt çizgiyi iptal eder */
 
-        /* Kahraman Başlık Alanı */
+        /* Kahraman Başlık Alanı (Hakkımızda Bölümü Olarak Tanımlandı) */
         .hero {
             text-align: center;
-            padding: 50px 20px 20px 20px;
+            padding: 60px 20px 20px 20px;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -135,6 +183,7 @@
             max-width: 950px;
             margin: 0 auto 80px auto;
             padding: 0 20px;
+            scroll-margin-top: 90px; /* Sabit menünün başlığı kapatmasını önler */
         }
         .section-title {
             font-size: 1.8rem;
@@ -155,7 +204,7 @@
             border-radius: 16px;
             padding: 28px;
             display: flex;
-            align-items: center; /* Logoları dikeyde tam ortalamak için */
+            align-items: center;
             gap: 25px;
             transition: transform 0.2s, box-shadow 0.2s;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
@@ -183,8 +232,6 @@
             margin-bottom: 12px;
         }
         .badge-live { background-color: var(--badge-live-bg); color: var(--badge-live); }
-        .badge-test { background-color: var(--badge-test-bg); color: var(--badge-test); }
-        .badge-soon { background-color: var(--badge-soon-bg); color: var(--badge-soon); }
         
         .app-title {
             font-size: 1.5rem;
@@ -224,12 +271,6 @@
             background-color: #edf2f7;
             border-color: #a0aec0;
         }
-        .btn-disabled {
-            background-color: #edf2f7;
-            color: #a0aec0;
-            border-color: #e2e8f0;
-            cursor: not-allowed;
-        }
         footer {
             text-align: center;
             padding: 40px 20px;
@@ -245,22 +286,27 @@
 <body>
 
     <nav>
-        <div class="logo-area">
-            <img src="icanlogo.jpg" alt="iCan_ Logo" class="nav-logo-img" onerror="this.src='icanlogo.png'">
-        </div>
-        <div class="nav-links">
-            <a href="#apps">Uygulamalar</a>
-            <a href="#">Hakkımızda</a>
-            <a href="mailto:icandefence@gmail.com">İletişim</a>
-            <a href="#apps" class="btn-nav-discover">Uygulamaları Keşfet</a>
+        <div class="nav-container">
+            <a href="https://play.google.com/store/apps/dev?id=6278884197273666393" class="logo-link" target="_blank">
+                <img src="icanlogo.jpg" alt="iCan_ Logo" class="nav-logo-img" onerror="this.src='icanlogo.png'">
+                <span class="logo-subtext">icandefence</span>
+            </a>
+            <div class="nav-links">
+                <!-- Yerleri değiştirildi ve takip için id eklendi -->
+                <a href="#about" id="nav-about">Hakkımızda</a>
+                <a href="#apps" id="nav-apps">Uygulamalar</a>
+                <a href="mailto:icandefence@gmail.com">İletişim</a>
+                <a href="#apps" class="btn-nav-discover">Uygulamaları Keşfet</a>
+            </div>
         </div>
     </nav>
 
-    <div class="hero">
+    <!-- Takip mekanizması için id="about" eklendi -->
+    <div class="hero" id="about">
         <span class="hero-mini-title">● Mobil Uygulama Geliştirici</span>
         <h1>Fikirlerimizi<br>Uygulamaya<br><span class="yellow-text">Döküyoruz</span></h1>
         <p class="hero-sub">iCan_ markasıyla eğitimden spora, her alana dokunacak Android uygulamaları geliştiriyoruz.</p>
-        <a href="#apps" class="btn-hero-view">⬇ Uygulamalarimizi Gör</a>
+        <a href="#apps" class="btn-hero-view">⬇ Uygulamalarımızı Gör</a>
     </div>
 
     <div class="banner-container">
@@ -279,7 +325,7 @@
                     <h3 class="app-title">ICanLingoENG</h3>
                     <p class="app-desc">İnteraktif 3D avatar öğretmenle, istediğiniz zaman istediğiniz yerde ücretsiz olarak İngilizce öğrenin. Sesli telaffuz ve yüzlerce alıştırma ile İngilizce öğrenmeyi kolaylaştıran modern dil eğitimi.</p>
                     <div class="links">
-                        <a href="#" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.ican.lingoeng" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
                         <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
                 </div>
@@ -293,7 +339,7 @@
                     <h3 class="app-title">ICanFB - Fenerbahçe Fikstür</h3>
                     <p class="app-desc">Fenerbahçeli taraftarlar için özel olarak tasarlanmış; güncel fikstür takibi, gönül verdiğiniz takımın maçlarını kaçırmayın.</p>
                     <div class="links">
-                        <a href="#" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
+                        <a href="https://play.google.com/store/apps/details?id=com.icanfb" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
                         <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
                 </div>
@@ -307,7 +353,7 @@
                     <h3 class="app-title">ICan Sayı Doku</h3>
                     <p class="app-desc">Zihninizi zinde tutacak, minimalist tasarıma ve kullanıcı dostu arayüze sahip, her yaşa uygun modern bir 4x4 ve klasik Sudoku bulmaca oyunu. 4x4, 6x6 ve 9x9 matris seçenekleriyle başlangıçtan uzman seviyesine kadar her yaşa ve her zorluk derecesine hitap eden zeka bulmacası.</p>
                     <div class="links">
-                        <a href="#" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
+                        <a href="https://play.google.com/store/apps/dev?id=6278884197273666393" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
                         <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
                 </div>
@@ -318,8 +364,42 @@
 
     <footer>
         <p>&copy; 2026 iCan_ Mobile. Tüm Hakları Saklıdır.</p>
-        <p>İletişim: <a href="mailto:icandefence@gmail.com">icandefence@gmail.com</a> | <a href="https://igbcan.github.io/app-ads.txt" target="_blank">app-ads.txt</a></p>
+        <p>İletişim: <a href="mailto:icandefence@gmail.com">icandefence@gmail.com</a></p>
     </footer>
+
+    <!-- Ekran Kaydırma Durumunu Takip Eden JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = [document.getElementById('about'), document.getElementById('apps')];
+            const navLinks = {
+                'about': document.getElementById('nav-about'),
+                'apps': document.getElementById('nav-apps')
+            };
+
+            const options = {
+                root: null,
+                rootMargin: '-40% 0px -50% 0px', // Ekranın ortasına gelen bölümü tespit eder
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Önce tüm aktif sınıfları temizle
+                        Object.values(navLinks).forEach(link => link.classList.remove('active'));
+                        // Sadece görünür olan bölümün menü linkine 'active' sınıfı ekle
+                        if (navLinks[entry.target.id]) {
+                            navLinks[entry.target.id].classList.add('active');
+                        }
+                    }
+                });
+            }, options);
+
+            sections.forEach(section => {
+                if (section) observer.observe(section);
+            });
+        });
+    </script>
 
 </body>
 </html>
