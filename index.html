@@ -52,7 +52,7 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Logo ve Yazı Alanı */
+        /* Logo ve Yazı Alanı Link Yapısı */
         .logo-link {
             display: flex;
             flex-direction: column;
@@ -92,7 +92,7 @@
         }
         .nav-links a:hover { color: var(--accent-blue); }
         
-        /* Aktif Menü Elemanı İşaretçisi (Mavi yazı ve alt çizgi) */
+        /* Aktif Menü Elemanı İşaretçisi */
         .nav-links a.active {
             color: var(--accent-blue);
             font-weight: 600;
@@ -116,9 +116,9 @@
             font-weight: 600 !important;
         }
         .btn-nav-discover:hover { background-color: #1557b0; }
-        .btn-nav-discover.active::after { display: none; } /* Buton için alt çizgiyi iptal eder */
+        .btn-nav-discover.active::after { display: none; }
 
-        /* Kahraman Başlık Alanı (Hakkımızda Bölümü Olarak Tanımlandı) */
+        /* Kahraman Başlık Alanı (Hakkımızda Bölümü) */
         .hero {
             text-align: center;
             padding: 60px 20px 20px 20px;
@@ -233,12 +233,21 @@
         }
         .badge-live { background-color: var(--badge-live-bg); color: var(--badge-live); }
         
+        .app-title-link {
+            text-decoration: none;
+            display: inline-block;
+        }
         .app-title {
             font-size: 1.5rem;
             font-weight: bold;
             color: #0f172a;
             margin: 0 0 8px 0;
+            transition: color 0.2s;
         }
+        .app-title-link:hover .app-title {
+            color: var(--accent-blue);
+        }
+        
         .app-desc {
             color: var(--text-muted);
             font-size: 0.98rem;
@@ -292,7 +301,6 @@
                 <span class="logo-subtext">icandefence</span>
             </a>
             <div class="nav-links">
-                <!-- Yerleri değiştirildi ve takip için id eklendi -->
                 <a href="#about" id="nav-about">Hakkımızda</a>
                 <a href="#apps" id="nav-apps">Uygulamalar</a>
                 <a href="mailto:icandefence@gmail.com">İletişim</a>
@@ -301,7 +309,6 @@
         </div>
     </nav>
 
-    <!-- Takip mekanizması için id="about" eklendi -->
     <div class="hero" id="about">
         <span class="hero-mini-title">● Mobil Uygulama Geliştirici</span>
         <h1>Fikirlerimizi<br>Uygulamaya<br><span class="yellow-text">Döküyoruz</span></h1>
@@ -322,11 +329,11 @@
                 <img src="lingoeng.png" alt="ICanLingoENG Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-live">● Google Play'de Yayında</span>
-                    <h3 class="app-title">ICanLingoENG</h3>
+                    <a href="lingoeng.html" class="app-title-link"><h3 class="app-title">ICanLingoENG</h3></a>
                     <p class="app-desc">İnteraktif 3D avatar öğretmenle, istediğiniz zaman istediğiniz yerde ücretsiz olarak İngilizce öğrenin. Sesli telaffuz ve yüzlerce alıştırma ile İngilizce öğrenmeyi kolaylaştıran modern dil eğitimi.</p>
                     <div class="links">
                         <a href="https://play.google.com/store/apps/details?id=com.ican.lingoeng" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
-                        <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
+                        <a href="lingoeng.html#privacy-policy" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
                 </div>
             </div>
@@ -336,11 +343,11 @@
                 <img src="icanfb.png" alt="ICanFB Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-live">● Google Play'de Yayında</span>
-                    <h3 class="app-title">ICanFB - Fenerbahçe Fikstür</h3>
+                    <a href="icanfb.html" class="app-title-link"><h3 class="app-title">ICanFB - Fenerbahçe Fikstür</h3></a>
                     <p class="app-desc">Fenerbahçeli taraftarlar için özel olarak tasarlanmış; güncel fikstür takibi, gönül verdiğiniz takımın maçlarını kaçırmayın.</p>
                     <div class="links">
                         <a href="https://play.google.com/store/apps/details?id=com.icanfb" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
-                        <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
+                        <a href="icanfb.html#privacy-policy" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
                 </div>
             </div>
@@ -350,11 +357,11 @@
                 <img src="sayidoku.png" alt="ICan Sayı Doku Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-live">● Google Play'de Yayında</span>
-                    <h3 class="app-title">ICan Sayı Doku</h3>
+                    <a href="icansayidoku.html" class="app-title-link"><h3 class="app-title">ICan Sayı Doku</h3></a>
                     <p class="app-desc">Zihninizi zinde tutacak, minimalist tasarıma ve kullanıcı dostu arayüze sahip, her yaşa uygun modern bir 4x4 ve klasik Sudoku bulmaca oyunu. 4x4, 6x6 ve 9x9 matris seçenekleriyle başlangıçtan uzman seviyesine kadar her yaşa ve her zorluk derecesine hitap eden zeka bulmacası.</p>
                     <div class="links">
                         <a href="https://play.google.com/store/apps/dev?id=6278884197273666393" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
-                        <a href="https://igbcan.github.io/lingoeng.html" class="btn btn-secondary">Gizlilik Politikası</a>
+                        <a href="icansayidoku.html#privacy-policy" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
                 </div>
             </div>
@@ -378,16 +385,14 @@
 
             const options = {
                 root: null,
-                rootMargin: '-40% 0px -50% 0px', // Ekranın ortasına gelen bölümü tespit eder
+                rootMargin: '-40% 0px -50% 0px',
                 threshold: 0
             };
 
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        // Önce tüm aktif sınıfları temizle
                         Object.values(navLinks).forEach(link => link.classList.remove('active'));
-                        // Sadece görünür olan bölümün menü linkine 'active' sınıfı ekle
                         if (navLinks[entry.target.id]) {
                             navLinks[entry.target.id].classList.add('active');
                         }
