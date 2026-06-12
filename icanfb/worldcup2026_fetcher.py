@@ -184,20 +184,37 @@ def sync_worldcup2026() -> None:
     log.info("=== WC2026: Senkronizasyon başarıyla tamamlandı ===")
 
 
+# ── Çalıştırma ve Test Bloğu (GitHub Actions / Local Uyumlu) ──────────────────
 if __name__ == "__main__":
-    # Tek başına çalıştırıldığında (Lokal Test için)
     import sys
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
     try:
         import firebase_admin
         from firebase_admin import credentials
+        
         if not firebase_admin._apps:
-            key_path = os.path.join(os.path.dirname(__file__), "serviceAccountKey.json")
+            sa_json = os.environ.get("FIREBASE_SERVICE_ACCOUNT", "").strip()
             db_url  = "https://icanfb-default-rtdb.europe-west1.firebasedatabase.app/"
-            cred = credentials.Certificate(key_path)
+
+            if sa_json:
+                # GitHub Actions ortamındayız, secret değişkeni kullanılıyor
+                cred = credentials.Certificate(json.loads(sa_json))
+                log.info("Firebase: GitHub Actions ortam değişkeni üzerinden bağlanıldı.")
+            else:
+                # Lokal bilgisayardayız, serviceAccountKey.json aranıyor
+                key_path = os.path.join(os.path.dirname(__file__), "serviceAccountKey.json")
+                if not os.path.exists(key_path):
+                    log.error("FIREBASE_SERVICE_ACCOUNT ortam değişkeni veya serviceAccountKey.json bulunamadı!")
+                    sys.exit(1)
+                cred = credentials.Certificate(key_path)
+                log.info("Firebase: Yerel serviceAccountKey.json üzerinden bağlanıldı.")
+
             firebase_admin.initialize_app(cred, {"databaseURL": db_url})
+            
         sync_worldcup2026()
+        
     except ImportError:
         log.warning("firebase_admin yok, sadece terminal testi yapılıyor...")
         res = _fetch_from_sporekrani()
-        if res: print(json.dumps(res[:1], indent=2, ensure_ascii=False))
+        if res: 
+            print(json.dumps(res[:1], indent=2, ensure_ascii=False))
