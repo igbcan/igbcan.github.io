@@ -33,3 +33,11 @@ jobs:
         run: |
           cd icanfb
           python scraper.py
+
+      # === TEMPORARY: FIFA World Cup 2026 (June 2026) - remove this step after July 19 2026 ===
+      - name: Run World Cup 2026 Fetcher (TEMPORARY)
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          cd icanfb
+          python worldcup2026_fetcher.py
