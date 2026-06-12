@@ -313,7 +313,7 @@
         <span class="hero-mini-title">● Mobil Uygulama Geliştirici</span>
         <h1>Fikirlerimizi<br>Uygulamaya<br><span class="yellow-text">Döküyoruz</span></h1>
         <p class="hero-sub">iCan_ markasıyla eğitimden spora, her alana dokunacak Android uygulamaları geliştiriyoruz.</p>
-        <a href="#apps" class="btn-hero-view">⬇ Uygulamalarımızı Gör</a>
+        <a href="#apps" class="btn-hero-view">⬇ Uygulamalarimizi Gör</a>
     </div>
 
     <div class="banner-container">
@@ -324,6 +324,7 @@
         <h2 class="section-title">Uygulamalarımız</h2>
         <div class="apps-list">
 
+            <!-- ICanLingoENG -->
             <div class="app-card">
                 <img src="lingoeng.png" alt="ICanLingoENG Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
@@ -337,6 +338,7 @@
                 </div>
             </div>
 
+            <!-- ICanFB - Fenerbahçe Fikstür -->
             <div class="app-card">
                 <img src="icanfb.png" alt="ICanFB Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
@@ -350,15 +352,16 @@
                 </div>
             </div>
 
+            <!-- ICan Sayı Doku -->
             <div class="app-card">
                 <img src="sayidoku.png" alt="ICan Sayı Doku Logo" class="app-icon" onerror="this.src='https://via.placeholder.com/100'">
                 <div class="app-info">
                     <span class="badge badge-live">● Google Play'de Yayında</span>
-                    <a href="icansayidoku.html" class="app-title-link"><h3 class="app-title">ICan Sayı Doku</h3></a>
+                    <a href="iansayidoku.html" class="app-title-link"><h3 class="app-title">ICan Sayı Doku</h3></a>
                     <p class="app-desc">Zihninizi zinde tutacak, minimalist tasarıma ve kullanıcı dostu arayüze sahip, her yaşa uygun modern bir 4x4 ve klasik Sudoku bulmaca oyunu. 4x4, 6x6 ve 9x9 matris seçenekleriyle başlangıçtan uzman seviyesine kadar her yaşa ve her zorluk derecesine hitap eden zeka bulmacası.</p>
                     <div class="links">
                         <a href="https://play.google.com/store/apps/details?id=com.ican.sayidoku" class="btn btn-primary" target="_blank">Google Play'de Edin</a>
-                        <a href="icansayidoku.html#privacy-policy" class="btn btn-secondary">Gizlilik Politikası</a>
+                        <a href="iansayidoku.html#privacy-policy" class="btn btn-secondary">Gizlilik Politikası</a>
                     </div>
                 </div>
             </div>
@@ -371,6 +374,7 @@
         <p>İletişim: <a href="mailto:icandefence@gmail.com">icandefence@gmail.com</a></p>
     </footer>
 
+    <!-- Ekran Kaydırma Durumunu Takip Eden JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const sections = [document.getElementById('about'), document.getElementById('apps')];
@@ -381,4 +385,26 @@
 
             const options = {
                 root: null,
-                rootMargin:
+                rootMargin: '-40% 0px -50% 0px',
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        Object.values(navLinks).forEach(link => link.classList.remove('active'));
+                        if (navLinks[entry.target.id]) {
+                            navLinks[entry.target.id].classList.add('active');
+                        }
+                    }
+                });
+            }, options);
+
+            sections.forEach(section => {
+                if (section) observer.observe(section);
+            });
+        });
+    </script>
+
+</body>
+</html>
