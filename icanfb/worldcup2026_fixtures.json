@@ -6,7 +6,7 @@
     "A": ["Mexico", "USA", "Canada"],
     "B": ["Netherlands", "Argentina", "Ecuador", "Venezuela"],
     "C": ["Spain", "Uruguay", "South Korea", "South Africa"],
-    "D": ["Germany", "Japan", "Portugal", "Morocco"],
+    "D": ["Germany", "Japan", "Portugal", "Turkey"],
     "E": ["France", "Austria", "Croatia", "South Korea"],
     "F": ["Brazil", "Colombia", "Switzerland", "Cameroon"],
     "G": ["England", "Serbia", "Denmark", "Bolivia"],
@@ -100,7 +100,7 @@
     {
       "match_id": "wc2026_009",
       "home_team": "Portugal",
-      "away_team": "Morocco",
+      "away_team": "Turkey",
       "date_utc": "2026-06-15T00:00:00Z",
       "venue": "Hard Rock Stadium, Miami",
       "group": "D",
