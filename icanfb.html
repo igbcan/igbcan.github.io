@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-LLWG4WLFQQ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LLWG4WLFQQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
 
-  gtag('config', 'G-LLWG4WLFQQ');
-</script>
+      gtag('config', 'G-LLWG4WLFQQ');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ICanFB - Fenerbahçe Fikstür - iCan_ Mobile</title>
@@ -34,7 +34,6 @@
             line-height: 1.6;
             scroll-behavior: smooth;
         }
-        /* Üst Menü Çubuğu */
         nav {
             background-color: #ffffff;
             padding: 10px 40px;
@@ -57,7 +56,6 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-        /* Ana Sayfaya Dönüş Sağlayan Logo Alanı */
         .logo-link {
             display: flex;
             flex-direction: column;
@@ -86,8 +84,6 @@
             padding-bottom: 4px;
         }
         .nav-links a:hover { color: var(--accent-blue); }
-        
-        /* Dinamik Aktif Sayfa İşaretçisi */
         .nav-links a.active { color: var(--accent-blue); font-weight: 600; }
         .nav-links a.active::after {
             content: '';
@@ -100,85 +96,29 @@
             border-radius: 2px;
         }
 
-        /* Bölüm Alanları Tasarımı */
-        .section-container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            scroll-margin-top: 90px;
-        }
-        .app-intro-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 40px;
-            display: flex;
-            gap: 35px;
-            align-items: flex-start;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-            margin-bottom: 40px;
-        }
-        .app-big-icon {
-            width: 120px;
-            height: 120px;
-            border-radius: 24px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-        .badge {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
+        .section-container { max-width: 900px; margin: 0 auto; padding: 40px 20px; scroll-margin-top: 90px; }
+        .app-intro-card { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 40px; display: flex; gap: 35px; align-items: flex-start; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); margin-bottom: 40px; }
+        .app-big-icon { width: 120px; height: 120px; border-radius: 24px; object-fit: cover; border: 1px solid var(--border); flex-shrink: 0; }
+        .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; margin-bottom: 12px; }
         .badge-live { background-color: var(--badge-live-bg); color: var(--badge-live); }
         h1 { font-size: 2.2rem; font-weight: 800; color: #0f172a; margin: 0 0 15px 0; }
         .app-long-desc { color: #4a5568; font-size: 1.05rem; line-height: 1.7; margin-bottom: 25px; }
         
-        /* Butonlar */
         .links-flex { display: flex; gap: 15px; }
-        .btn {
-            padding: 10px 24px;
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: background-color 0.2s;
-            border: 1px solid #cbd5e1;
-            display: inline-flex;
-            align-items: center;
-        }
+        .btn { padding: 10px 24px; border-radius: 8px; font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: background-color 0.2s; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; }
         .btn-primary { background-color: #1a73e8; color: white; border-color: #1a73e8; }
         .btn-primary:hover { background-color: #1557b0; border-color: #1557b0; }
         .btn-secondary { background-color: #f8fafc; color: #4a5568; }
         .btn-secondary:hover { background-color: #edf2f7; border-color: #a0aec0; }
 
-        /* Gizlilik Politikası Alanı Tasarımı */
-        .privacy-box {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
-        }
+        .privacy-box { background-color: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 40px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
         .privacy-box h2 { font-size: 1.8rem; color: #0f172a; border-bottom: 2px solid #cbd5e1; padding-bottom: 10px; margin-top: 0; }
         .privacy-box h3 { font-size: 1.25rem; color: var(--primary-blue); margin-top: 30px; }
         .privacy-box p, .privacy-box li { color: #4a5568; font-size: 0.98rem; line-height: 1.7; }
         .privacy-box ul { padding-left: 20px; }
         .update-date { font-style: italic; color: var(--text-muted); font-size: 0.9rem; }
 
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            border-top: 1px solid var(--border);
-            background-color: #ffffff;
-            margin-top: 60px;
-        }
+        footer { text-align: center; padding: 40px 20px; color: var(--text-muted); font-size: 0.9rem; border-top: 1px solid var(--border); background-color: #ffffff; margin-top: 60px; }
         footer a { color: var(--accent-blue); text-decoration: none; }
     </style>
 </head>
@@ -186,7 +126,6 @@
 
     <nav>
         <div class="nav-container">
-            <!-- Ana sayfaya (index.html) dönen logo alanı -->
             <a href="https://igbcan.github.io/" class="logo-link">
                 <img src="icanlogo.jpg" alt="iCan_ Logo" class="nav-logo-img" onerror="this.src='icanlogo.png'">
                 <span class="logo-subtext">icandefence</span>
@@ -199,7 +138,6 @@
         </div>
     </nav>
 
-    <!-- BÖLÜM 1: UYGULAMA TANITIMI -->
     <div class="section-container" id="app-details">
         <div class="app-intro-card">
             <img src="icanfb.png" alt="ICanFB Logo" class="app-big-icon" onerror="this.src='https://via.placeholder.com/120'">
@@ -215,13 +153,12 @@
         </div>
     </div>
 
-    <!-- BÖLÜM 2: GİZLİLİK POLİTİKASI -->
     <div class="section-container" id="privacy-policy">
         <div class="privacy-box">
             <h2>Gizlilik Politikası</h2>
-            <p class="update-date">Son Güncelleme Tarihi: 8 Haziran 2026</p>
+            <p class="update-date">Son Güncelleme Tarihi: 14 Haziran 2026</p>
             
-            <p>iCan_ olarak, ICanFB - Fenerbahçe Fikstür uygulamamızın kullanıcılarının gizlilik haklarına saygı duyuyor ve buna büyük önem veriyoruz. Bu gizlilik politikası, uygulamamızı kullanırken hangi verilerin nasıl işlendiğini açıklar.</p>
+            <p>iCan_ olarak, ICanFB - Fenerbahçe Fikstür uygulamamızın kullanıcılarının gizlilik haklarına saygı duyuyor ve buna büyük önem veriyoruz. This gizlilik politikası, uygulamamızı kullanırken hangi verilerin nasıl işlendiğini açıklar.</p>
 
             <h3>1. Kişisel Verilerin Toplanması ve Kullanımı</h3>
             <p>ICanFB - Fenerbahçe Fikstür uygulaması, kullanıcılardan doğrudan herhangi bir ad, soyad, e-posta adresi veya telefon numarası gibi kişisel olarak tanımlanabilir bilgi **toplamaz, saklamaz ve işlemez**.</p>
@@ -250,37 +187,21 @@
         <p>İletişim: <a href="mailto:icandefence@gmail.com">icandefence@gmail.com</a></p>
     </footer>
 
-    <!-- Ekran Kaydırma Durumunu Takip Eden JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const sections = [document.getElementById('app-details'), document.getElementById('privacy-policy')];
-            const navLinks = {
-                'app-details': document.getElementById('nav-intro'),
-                'privacy-policy': document.getElementById('nav-privacy')
-            };
-
-            const options = {
-                root: null,
-                rootMargin: '-30% 0px -60% 0px',
-                threshold: 0
-            };
-
+            const navLinks = { 'app-details': document.getElementById('nav-intro'), 'privacy-policy': document.getElementById('nav-privacy') };
+            const options = { root: null, rootMargin: '-30% 0px -60% 0px', threshold: 0 };
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         Object.values(navLinks).forEach(link => link.classList.remove('active'));
-                        if (navLinks[entry.target.id]) {
-                            navLinks[entry.target.id].classList.add('active');
-                        }
+                        if (navLinks[entry.target.id]) { navLinks[entry.target.id].classList.add('active'); }
                     }
                 });
             }, options);
-
-            sections.forEach(section => {
-                if (section) observer.observe(section);
-            });
+            sections.forEach(section => { if (section) observer.observe(section); });
         });
     </script>
-
 </body>
 </html>
