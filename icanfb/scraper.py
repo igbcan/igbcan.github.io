@@ -60,18 +60,15 @@ USER_AGENTS = [
 # ──────────────────────────────────────────────
 def init_firebase() -> None:
     try:
-        # 1. Önce ortam değişkenini kontrol et (GitHub Actions için)
         sa_json = os.environ.get("FIREBASE_SERVICE_ACCOUNT")
         db_url = "https://icanfb-default-rtdb.europe-west1.firebasedatabase.app/"
 
         if not firebase_admin._apps:
             if sa_json:
-                # JSON metnini sözlüğe çevir
                 cred_dict = json.loads(sa_json)
                 cred = credentials.Certificate(cred_dict)
                 log.info("Firebase bağlantısı ortam değişkeni üzerinden kuruldu.")
             else:
-                # Yerel dosya kontrolü
                 json_path = "serviceAccountKey.json"
                 if not os.path.exists(json_path):
                     log.error(f"HATA: Ne ortam değişkeni ne de '{json_path}' bulundu!")
@@ -106,9 +103,8 @@ def parse_date_to_utc(raw_time_str: str, day_header: str) -> tuple[str, datetime
         tomorrow = now + datetime.timedelta(days=1)
         target_day, target_month, target_year = tomorrow.day, tomorrow.month, tomorrow.year
     elif "bugün" in header:
-        pass # Zaten bugüne ayarlı
+        pass
     else:
-        # Format: 'CUMARTESİ · 2 Mayıs' veya '04.05.2026 Pazartesi'
         m_dot = re.search(r"(\d{2})\.(\d{2})\.(\d{4})", header)
         if m_dot:
             target_day, target_month, target_year = map(int, m_dot.groups())
@@ -118,11 +114,9 @@ def parse_date_to_utc(raw_time_str: str, day_header: str) -> tuple[str, datetime
                 target_day = int(m_text.group(1))
                 month_name = m_text.group(2)
                 target_month = TR_MONTHS.get(month_name, now.month)
-                # Yıl geçişi (Örnek: Kasım/Aralık ayında Ocak/Şubat maçı)
                 if now.month >= 10 and target_month <= 3:
                     target_year += 1
 
-    # Saati ayarla
     m_time = re.search(r"(\d{2}):(\d{2})", raw_time_str)
     hour, minute = (0, 0)
     if m_time:
@@ -142,7 +136,7 @@ def fetch_page(url: str) -> BeautifulSoup | None:
         resp.encoding = "utf-8"
         return BeautifulSoup(resp.text, "html.parser")
     except requests.exceptions.SSLError as ssl_err:
-        log.warning(f"SSL sertifika doğrulama hatası ({url}), doğrulama devre dışı bırakılarak tekrar deneniyor: {ssl_err}")
+        log.warning(f"SSL hatası ({url}), doğrulamasız deneniyor: {ssl_err}")
         try:
             import urllib3
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -151,7 +145,7 @@ def fetch_page(url: str) -> BeautifulSoup | None:
             resp.encoding = "utf-8"
             return BeautifulSoup(resp.text, "html.parser")
         except Exception as exc:
-            log.error(f"Sayfa alınamadı ({url}) SSL devre dışı iken de: {exc}")
+            log.error(f"Sayfa alınamadı ({url}): {exc}")
             return None
     except Exception as exc:
         log.error(f"Sayfa alınamadı ({url}): {exc}")
@@ -180,20 +174,16 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
             
         if "event-list__row" in child.get("class", []):
             try:
-                # Saat ve Tarih
                 time_el = child.select_one(".event-list__time")
                 raw_time = time_el.get_text(strip=True) if time_el else "00:00"
                 date_iso, dt_local = parse_date_to_utc(raw_time, current_day)
                 
-                # Bugünden (00:00) önceki geçmiş maçları filtrele
                 if dt_local < today_start:
                     continue
 
-                # Başlık
                 name_el = child.select_one(".event-list__name")
                 match_name = name_el.get_text(strip=True) if name_el else "Maç"
                 
-                # Rakip ve Ev Sahibi Kontrolü
                 is_home = False
                 opponent = match_name
                 if " - " in match_name:
@@ -205,37 +195,64 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
                         is_home = False
                         opponent = parts[0]
 
-                # Branş
+                league_el = child.select_one(".event-list__league")
+                league = league_el.get_text(strip=True) if league_el else "Lig Bilgisi Yok"
+                league_lower = league.lower()
+                name_lower = match_name.lower()
+                url_lower = url.lower()
+
+                # Branş Tespiti (Tekerlekli basketbol dahil tüm branşlar)
                 sport_img = child.select_one(".event-list__sport-icon")
                 sport_raw = sport_img.get("alt", "").lower() if sport_img else ""
-                branch = "Football"
-                url_lower = url.lower()
-                if "basketbol" in sport_raw or "turkiye-basketbol" in url_lower:
+
+                if "basketbol" in sport_raw or "tekerlekli" in name_lower or "tekerlekli" in league_lower or "turkiye-basketbol" in url_lower:
                     branch = "Basketball"
                 elif "voleybol" in sport_raw or "turkiye-voleybol" in url_lower:
                     branch = "Volleyball"
-                elif "futbol" in sport_raw or "turkiye-futbol" in url_lower:
+                elif "tenis" in sport_raw or "tennis" in sport_raw or "davis cup" in league_lower or "wimbledon" in league_lower or "atp" in league_lower or "wta" in league_lower:
+                    branch = "Tennis"
+                elif "hentbol" in sport_raw or "handball" in sport_raw:
+                    branch = "Handball"
+                elif "atletizm" in sport_raw or "athletics" in sport_raw or "elmas lig" in league_lower or "diamond league" in league_lower or "maraton" in league_lower:
+                    branch = "Athletics"
+                elif "yüzme" in sport_raw or "yuzme" in sport_raw or "swimming" in sport_raw:
+                    branch = "Swimming"
+                elif "yelken" in sport_raw or "sailing" in sport_raw or "yat" in league_lower:
+                    branch = "Sailing"
+                elif "kürek" in sport_raw or "kurek" in sport_raw or "rowing" in sport_raw:
+                    branch = "Rowing"
+                elif "boks" in sport_raw or "boxing" in sport_raw:
+                    branch = "Boxing"
+                elif "espor" in sport_raw or "e-spor" in sport_raw or "esports" in sport_raw:
+                    branch = "Esports"
+                elif "satranç" in sport_raw or "satranc" in sport_raw or "chess" in sport_raw:
+                    branch = "Chess"
+                elif "taekwondo" in sport_raw or "tekvando" in sport_raw:
+                    branch = "Taekwondo"
+                else:
                     branch = "Football"
 
-                # Maç Yeri (Venue) Tahmini
+                # Yer / Tesis Tahmini
                 venue = "Deplasman"
                 if is_home:
                     if id_prefix == "fb":
                         if branch == "Football": venue = "Ülker Stadyumu"
                         elif branch == "Basketball": venue = "Ülker Spor ve Etkinlik Salonu"
                         elif branch == "Volleyball": venue = "Burhan Felek Voleybol Salonu"
+                        elif branch == "Sailing": venue = "Fenerbahçe Dereağzı / Kalamış"
+                        elif branch == "Rowing": venue = "Sapanca / Dereağzı Tesisleri"
+                        elif branch == "Swimming": venue = "Fenerbahçe Yüzme Havuzu"
+                        elif branch == "Athletics": venue = "Fenerbahçe Dereağzı Tesisleri"
+                        elif branch in ["Boxing", "Chess", "Taekwondo"]: venue = "Dereağzı Lefter Küçükandonyadis Tesisleri"
                         else: venue = "Fenerbahçe Tesisleri"
                     else:
                         if branch == "Football": venue = "Türkiye (İç Saha)"
                         elif branch == "Basketball": venue = "Türkiye (İç Saha)"
                         elif branch == "Volleyball": venue = "İstanbul / Türkiye"
-                        else: venue = "İç Saha"
+                        elif branch == "Tennis": venue = "İstanbul / Türkiye (Kort)"
+                        else: venue = "Türkiye (İç Saha)"
 
-                # Lig
-                league_el = child.select_one(".event-list__league")
-                league = league_el.get_text(strip=True) if league_el else "Lig Bilgisi Yok"
-                
-                # Kanal Tespiti (Gelişmiş & Çoklu Kanal Desteği)
+                # Çoklu Kanal Desteği
                 channel_imgs = child.select(".event-list__channels .event-list__channel img")
                 if not channel_imgs:
                     channel_imgs = child.select(".event-list__channels-mobile img")
@@ -254,7 +271,7 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
                     text_ch = child.select_one(".event-list__channels") or child.select_one(".event-list__channel")
                     channel = text_ch.get_text(strip=True) if text_ch else "Yayın Yok"
                 
-                # Kararlı Match ID: Tarih (YYYY-MM-DD), branş, lig ve maç adına göre üretilir.
+                # Kararlı Match ID
                 date_ymd = dt_local.strftime("%Y-%m-%d")
                 clean_league = re.sub(r"[^\w\s-]", "", league).strip().lower().replace(" ", "_")
                 clean_name = re.sub(r"[^\w\s-]", "", match_name).strip().lower().replace(" ", "_")
