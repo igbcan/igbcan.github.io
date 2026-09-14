@@ -1,7 +1,6 @@
 """
 sporekrani_scraper.py
-Spor Ekranı'ndan Fenerbahçe maçlarını çekip Firebase'e kaydeder.
-Yerel serviceAccountKey.json dosyasını kullanır.
+Spor Ekranı'ndan Fenerbahçe ve Milli Takım maçlarını çekip Firebase'e kaydeder.
 """
 
 import os
@@ -256,8 +255,6 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
                     channel = text_ch.get_text(strip=True) if text_ch else "Yayın Yok"
                 
                 # Kararlı Match ID: Tarih (YYYY-MM-DD), branş, lig ve maç adına göre üretilir.
-                # Saat/Kanal/Stadyum sonradan belli olduğunda veya değiştiğinde ID sabit kalır,
-                # böylece Firebase ve Room veritabanında aynı maçın bilgileri doğrudan güncellenir.
                 date_ymd = dt_local.strftime("%Y-%m-%d")
                 clean_league = re.sub(r"[^\w\s-]", "", league).strip().lower().replace(" ", "_")
                 clean_name = re.sub(r"[^\w\s-]", "", match_name).strip().lower().replace(" ", "_")
