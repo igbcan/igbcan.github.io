@@ -1,6 +1,7 @@
 """
 sporekrani_scraper.py
-Spor Ekranı'ndan Fenerbahçe ve Milli Takım maçlarını çekip Firebase'e kaydeder.
+Spor Ekranı'ndan Fenerbahçe maçlarını çekip Firebase'e kaydeder.
+Yerel serviceAccountKey.json dosyasını kullanır.
 """
 
 import os
@@ -60,15 +61,18 @@ USER_AGENTS = [
 # ──────────────────────────────────────────────
 def init_firebase() -> None:
     try:
+        # 1. Önce ortam değişkenini kontrol et (GitHub Actions için)
         sa_json = os.environ.get("FIREBASE_SERVICE_ACCOUNT")
         db_url = "https://icanfb-default-rtdb.europe-west1.firebasedatabase.app/"
 
         if not firebase_admin._apps:
             if sa_json:
+                # JSON metnini sözlüğe çevir
                 cred_dict = json.loads(sa_json)
                 cred = credentials.Certificate(cred_dict)
                 log.info("Firebase bağlantısı ortam değişkeni üzerinden kuruldu.")
             else:
+                # Yerel dosya kontrolü
                 json_path = "serviceAccountKey.json"
                 if not os.path.exists(json_path):
                     log.error(f"HATA: Ne ortam değişkeni ne de '{json_path}' bulundu!")
@@ -84,39 +88,51 @@ def init_firebase() -> None:
 # ──────────────────────────────────────────────
 # YARDIMCI FONKSİYONLAR
 # ──────────────────────────────────────────────
-def parse_date_to_utc(raw_time_str: str, day_header: str) -> tuple[str, datetime.datetime]:
+def parse_date_to_utc(raw_time_str: str, day_header: str, href: str = "") -> tuple[str, datetime.datetime]:
     istanbul_tz = datetime.timezone(datetime.timedelta(hours=3))
     now = datetime.datetime.now(istanbul_tz)
     
     TR_MONTHS = {
-        "ocak": 1, "şubat": 2, "mart": 3, "nisan": 4, "mayıs": 5, "haziran": 6,
-        "temmuz": 7, "ağustos": 8, "eylül": 9, "ekim": 10, "kasım": 11, "aralık": 12,
+        "ocak": 1, "şubat": 2, "subat": 2, "mart": 3, "nisan": 4, "ni\u0307san": 4,
+        "mayıs": 5, "mayis": 5, "haziran": 6, "hazi\u0307ran": 6, "temmuz": 7,
+        "ağustos": 8, "agustos": 8, "eylül": 9, "eylul": 9, "ekim": 10, "eki\u0307m": 10,
+        "kasım": 11, "kasim": 11, "aralık": 12, "aralik": 12,
     }
 
     target_year = now.year
     target_month = now.month
     target_day = now.day
 
-    header = day_header.lower()
-    
-    if "yarın" in header:
-        tomorrow = now + datetime.timedelta(days=1)
-        target_day, target_month, target_year = tomorrow.day, tomorrow.month, tomorrow.year
-    elif "bugün" in header:
-        pass
+    # 1. Öncelikle satırın kendi linkindeki (/home/match/ID/YYYY/MM/DD/...) kesin tarihi kullan.
+    # Bu sayede gece yarısı (03:30 TSİ) sorgularında sitedeki 'Bugün/Yarın' önbellek kayması nedeniyle
+    # aynı maça yanlış gün atanıp mükerrer (çift) kayıt oluşması kesin olarak engellenir.
+    m_href = re.search(r"/home/match/\d+/(\d{4})/(\d{2})/(\d{2})/", href or "")
+    if m_href:
+        target_year, target_month, target_day = map(int, m_href.groups())
     else:
-        m_dot = re.search(r"(\d{2})\.(\d{2})\.(\d{4})", header)
-        if m_dot:
-            target_day, target_month, target_year = map(int, m_dot.groups())
+        header = day_header.lower()
+        
+        if "yarın" in header or "yarin" in header:
+            tomorrow = now + datetime.timedelta(days=1)
+            target_day, target_month, target_year = tomorrow.day, tomorrow.month, tomorrow.year
+        elif "bugün" in header or "bugun" in header:
+            pass # Zaten bugüne ayarlı
         else:
-            m_text = re.search(r"(\d{1,2})\s+([a-zçğıöşü]+)", header)
-            if m_text:
-                target_day = int(m_text.group(1))
-                month_name = m_text.group(2)
-                target_month = TR_MONTHS.get(month_name, now.month)
-                if now.month >= 10 and target_month <= 3:
-                    target_year += 1
+            # Format: 'CUMARTESİ · 2 Mayıs' veya '04.05.2026 Pazartesi'
+            m_dot = re.search(r"(\d{2})\.(\d{2})\.(\d{4})", header)
+            if m_dot:
+                target_day, target_month, target_year = map(int, m_dot.groups())
+            else:
+                m_text = re.search(r"(\d{1,2})\s+([a-zçğıöşü\u0307]+)", header)
+                if m_text:
+                    target_day = int(m_text.group(1))
+                    month_name = m_text.group(2)
+                    target_month = TR_MONTHS.get(month_name, now.month)
+                    # Yıl geçişi (Örnek: Kasım/Aralık ayında Ocak/Şubat maçı)
+                    if now.month >= 10 and target_month <= 3:
+                        target_year += 1
 
+    # Saati ayarla
     m_time = re.search(r"(\d{2}):(\d{2})", raw_time_str)
     hour, minute = (0, 0)
     if m_time:
@@ -136,7 +152,7 @@ def fetch_page(url: str) -> BeautifulSoup | None:
         resp.encoding = "utf-8"
         return BeautifulSoup(resp.text, "html.parser")
     except requests.exceptions.SSLError as ssl_err:
-        log.warning(f"SSL hatası ({url}), doğrulamasız deneniyor: {ssl_err}")
+        log.warning(f"SSL sertifika doğrulama hatası ({url}), doğrulama devre dışı bırakılarak tekrar deneniyor: {ssl_err}")
         try:
             import urllib3
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -145,7 +161,7 @@ def fetch_page(url: str) -> BeautifulSoup | None:
             resp.encoding = "utf-8"
             return BeautifulSoup(resp.text, "html.parser")
         except Exception as exc:
-            log.error(f"Sayfa alınamadı ({url}): {exc}")
+            log.error(f"Sayfa alınamadı ({url}) SSL devre dışı iken de: {exc}")
             return None
     except Exception as exc:
         log.error(f"Sayfa alınamadı ({url}): {exc}")
@@ -174,16 +190,21 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
             
         if "event-list__row" in child.get("class", []):
             try:
+                # Saat ve Tarih
                 time_el = child.select_one(".event-list__time")
                 raw_time = time_el.get_text(strip=True) if time_el else "00:00"
-                date_iso, dt_local = parse_date_to_utc(raw_time, current_day)
+                row_href = child.get("href", "")
+                date_iso, dt_local = parse_date_to_utc(raw_time, current_day, row_href)
                 
+                # Bugünden (00:00) önceki geçmiş maçları filtrele
                 if dt_local < today_start:
                     continue
 
+                # Başlık
                 name_el = child.select_one(".event-list__name")
                 match_name = name_el.get_text(strip=True) if name_el else "Maç"
                 
+                # Rakip ve Ev Sahibi Kontrolü
                 is_home = False
                 opponent = match_name
                 if " - " in match_name:
@@ -195,13 +216,15 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
                         is_home = False
                         opponent = parts[0]
 
+                # Branş
+                # Lig
                 league_el = child.select_one(".event-list__league")
                 league = league_el.get_text(strip=True) if league_el else "Lig Bilgisi Yok"
                 league_lower = league.lower()
                 name_lower = match_name.lower()
                 url_lower = url.lower()
 
-                # Branş Tespiti (Tekerlekli basketbol dahil tüm branşlar)
+                # Branş Tespiti (Tüm olimpik ve kulüp branşları)
                 sport_img = child.select_one(".event-list__sport-icon")
                 sport_raw = sport_img.get("alt", "").lower() if sport_img else ""
 
@@ -232,7 +255,7 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
                 else:
                     branch = "Football"
 
-                # Yer / Tesis Tahmini
+                # Maç Yeri (Venue) Tahmini
                 venue = "Deplasman"
                 if is_home:
                     if id_prefix == "fb":
@@ -251,8 +274,8 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
                         elif branch == "Volleyball": venue = "İstanbul / Türkiye"
                         elif branch == "Tennis": venue = "İstanbul / Türkiye (Kort)"
                         else: venue = "Türkiye (İç Saha)"
-
-                # Çoklu Kanal Desteği
+                
+                # Kanal Tespiti (Gelişmiş & Çoklu Kanal Desteği)
                 channel_imgs = child.select(".event-list__channels .event-list__channel img")
                 if not channel_imgs:
                     channel_imgs = child.select(".event-list__channels-mobile img")
@@ -271,7 +294,9 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
                     text_ch = child.select_one(".event-list__channels") or child.select_one(".event-list__channel")
                     channel = text_ch.get_text(strip=True) if text_ch else "Yayın Yok"
                 
-                # Kararlı Match ID
+                # Kararlı Match ID: Tarih (YYYY-MM-DD), branş, lig ve maç adına göre üretilir.
+                # Saat/Kanal/Stadyum sonradan belli olduğunda veya değiştiğinde ID sabit kalır,
+                # böylece Firebase ve Room veritabanında aynı maçın bilgileri doğrudan güncellenir.
                 date_ymd = dt_local.strftime("%Y-%m-%d")
                 clean_league = re.sub(r"[^\w\s-]", "", league).strip().lower().replace(" ", "_")
                 clean_name = re.sub(r"[^\w\s-]", "", match_name).strip().lower().replace(" ", "_")
@@ -292,6 +317,87 @@ def parse_matches_from_url(url: str, team_keyword: str = "fenerbahçe", id_prefi
     return matches
 
 # ──────────────────────────────────────────────
+# TEKİLLEŞTİRME VE KARARLI ID KORUMA
+# ──────────────────────────────────────────────
+def _norm_key(text: str) -> str:
+    s = (text or "").replace("\u0307", "").replace("İ", "i").replace("I", "ı").lower()
+    s = s.translate(str.maketrans("çğıöşü", "cgiosu"))
+    return re.sub(r"[^a-z0-9]+", "_", s).strip("_")
+
+def _local_date_from_utc(date_utc: str) -> datetime.date | None:
+    try:
+        istanbul_tz = datetime.timezone(datetime.timedelta(hours=3))
+        dt_utc = datetime.datetime.strptime(date_utc, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=datetime.timezone.utc)
+        return dt_utc.astimezone(istanbul_tz).date()
+    except Exception:
+        return None
+
+def deduplicate_and_preserve_ids(scraped_matches: list[dict], existing_matches: list[dict] | None) -> list[dict]:
+    """
+    1. Aynı gün, aynı branş, aynı lig ve aynı rakiple olan mükerrer satırları tekilleştirir
+       (farklı liglerdeki maçlar — örn. Süper Lig ve U19 Ligi — ayrı kalır).
+    2. Sitede takım/sponsor adı değişse veya maç günü 1-3 gün kaydırılsa bile Firebase'deki
+       mevcut match_id'yi korur; böylece mobil uygulama yeni satır eklemek yerine mevcut
+       satırı doğrudan günceller.
+    """
+    # 1. Tekilleştirme (aynı sorgu içinde)
+    deduped_map: dict[tuple, dict] = {}
+    for m in scraped_matches:
+        d = _local_date_from_utc(m.get("date_utc", ""))
+        key = (
+            _norm_key(m.get("branch", "")),
+            str(d) if d else m.get("date_utc", "")[:10],
+            _norm_key(m.get("league_name", "")),
+            _norm_key(m.get("opponent", "")),
+        )
+        if key not in deduped_map:
+            deduped_map[key] = dict(m)
+        else:
+            prev = deduped_map[key]
+            # Yeni kayıtta yayın kanalı varsa ve eskisinde yoksa güncelle
+            if prev.get("tv_channel") in ("", "Yayın Yok") and m.get("tv_channel") not in ("", "Yayın Yok"):
+                prev["tv_channel"] = m["tv_channel"]
+
+    deduped_list = list(deduped_map.values())
+    if not existing_matches:
+        return deduped_list
+
+    # 2. Mevcut Firebase kayıtlarıyla eşleştirip match_id koruma
+    existing_by_id = {ex.get("match_id"): ex for ex in existing_matches if isinstance(ex, dict) and ex.get("match_id")}
+    scraped_ids = {m.get("match_id") for m in deduped_list}
+    claimed_existing_ids = set(existing_by_id.keys() & scraped_ids)
+
+    for m in deduped_list:
+        if m.get("match_id") in existing_by_id:
+            continue
+
+        m_branch = _norm_key(m.get("branch", ""))
+        m_league = _norm_key(m.get("league_name", ""))
+        m_opp = _norm_key(m.get("opponent", ""))
+        m_date = _local_date_from_utc(m.get("date_utc", ""))
+
+        for ex in existing_matches:
+            if not isinstance(ex, dict):
+                continue
+            ex_id = ex.get("match_id")
+            if not ex_id or ex_id in claimed_existing_ids:
+                continue
+
+            if (
+                _norm_key(ex.get("branch", "")) == m_branch
+                and _norm_key(ex.get("league_name", "")) == m_league
+                and _norm_key(ex.get("opponent", "")) == m_opp
+            ):
+                ex_date = _local_date_from_utc(ex.get("date_utc", ""))
+                if m_date and ex_date and abs((m_date - ex_date).days) <= 3:
+                    log.info(f"Mevcut match_id korundu: {m['match_id']} -> {ex_id}")
+                    m["match_id"] = ex_id
+                    claimed_existing_ids.add(ex_id)
+                    break
+
+    return deduped_list
+
+# ──────────────────────────────────────────────
 # SCRAPING VE VERİ YAZMA
 # ──────────────────────────────────────────────
 def parse_and_save():
@@ -299,6 +405,8 @@ def parse_and_save():
     fb_matches = parse_matches_from_url(FB_TARGET_URL, team_keyword="fenerbahçe", id_prefix="fb")
     if fb_matches:
         ref_fb = db.reference("fenerbahce_fikstur")
+        existing_fb = ref_fb.child("matches").get() or []
+        fb_matches = deduplicate_and_preserve_ids(fb_matches, existing_fb)
         ref_fb.update({
             "last_update": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "matches": fb_matches
@@ -309,17 +417,14 @@ def parse_and_save():
 
     # 2. Milli Takımlar Fikstürü
     national_matches = []
-    seen_ids = set()
-    
     for url in NATIONAL_TARGET_URLS:
         scraped = parse_matches_from_url(url, team_keyword="türkiye", id_prefix="milli")
-        for m in scraped:
-            if m["match_id"] not in seen_ids:
-                seen_ids.add(m["match_id"])
-                national_matches.append(m)
+        national_matches.extend(scraped)
 
     if national_matches:
         ref_national = db.reference("milli_takimlar_fikstur")
+        existing_national = ref_national.child("matches").get() or []
+        national_matches = deduplicate_and_preserve_ids(national_matches, existing_national)
         ref_national.update({
             "last_update": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "match_count": len(national_matches),
